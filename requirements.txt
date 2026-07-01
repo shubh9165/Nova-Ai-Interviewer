@@ -1,0 +1,14 @@
+streamlit
+langchain
+langchain-groq
+langchain-classic
+langchain-community
+dotenv
+faster-whisper
+sounddevice
+scipy
+faiss-cpu
+sentence-transformers
+gtts
+pydantic
+langgraph
