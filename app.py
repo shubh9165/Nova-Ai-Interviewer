@@ -2,12 +2,20 @@ import streamlit as st
 
 from src.Graph.graph import create_graph
 from src.Node.final_report_node import final_report_node
+from src.voice_tools.voice_recorder import Recoder
+from src.voice_tools.text_to_speech import text_to_speech
+from src.voice_tools.speech_to_text import SpeechToText
+import os
+#speaker=text_to_speech()
+#Recoder=Recoder()
 
 st.set_page_config(
     page_title="Nova AI Interviewer",
     page_icon="🤖",
     layout="wide"
 )
+
+
 
 st.title("🤖 Nova AI Interviewer")
 
@@ -30,6 +38,23 @@ if "interview_state" not in st.session_state:
 
 if "started" not in st.session_state:
     st.session_state.started = False
+
+if "speaker" not in st.session_state:
+    st.session_state.speaker=text_to_speech()
+
+if "last_spoken_question" not in st.session_state:
+    st.session_state.last_spoken_question = ""
+
+if "recorder" not in st.session_state:
+    st.session_state.recorder=Recoder()
+
+if "current_answer" not in st.session_state:
+    st.session_state.current_answer = ""
+
+if "transcriber" not in st.session_state:
+    st.session_state.transcriber = SpeechToText()
+
+
 
 # -------------------------
 # Sidebar
@@ -71,6 +96,7 @@ with st.sidebar:
 if start_button:
 
     st.session_state.started = True
+
 
     st.session_state.interview_state = {
         "questions": [
@@ -116,24 +142,38 @@ if st.session_state.started:
 
         current_question = state["questions"][-1]
 
+
+       
+
         st.markdown(
             f"### Question {state['question_number']}"
         )
 
         st.info(current_question)
 
-        answer = st.text_area(
-            "Your Answer",
-            height=200,
-            key=f"answer_{state['question_number']}"
-        )
+        if st.session_state.last_spoken_question != current_question:
+            st.session_state.speaker.speak(current_question)
+            st.session_state.last_spoken_question = current_question
+
+        #Recoder.recorder()
+
+        audio=st.session_state.recorder.recorder()
+        
+        if audio:
+            audio_text = st.session_state.transcriber.transcribe("answer.wav")
+            st.session_state.current_answer=audio_text
+            st.success(audio_text)
+            os.remove("answer.wav")
+
+
+
 
         submit_answer = st.button(
             "Submit Answer"
         )
 
         if submit_answer:
-
+            answer=st.session_state.current_answer
             if answer.strip() == "":
 
                 st.warning(
@@ -156,7 +196,7 @@ if st.session_state.started:
 
                 # Save State
                 st.session_state.interview_state = updated_state
-
+                #st.session_state.spoken_question = -1
                 st.rerun()
 
 # -------------------------

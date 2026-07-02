@@ -12,3 +12,9 @@ sentence-transformers
 gtts
 pydantic
 langgraph
+streamlit_mic_recorder
+kokoro
+soundfile
+IPython
+torchvision
+faster_whisper
