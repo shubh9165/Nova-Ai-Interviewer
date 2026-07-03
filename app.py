@@ -152,8 +152,10 @@ if st.session_state.started:
         st.info(current_question)
 
         if st.session_state.last_spoken_question != current_question:
-            st.session_state.speaker.speak(current_question)
+            audio_buffer=st.session_state.speaker.speak(current_question)
+
             st.session_state.last_spoken_question = current_question
+            st.audio(audio_buffer, format="audio/wav")
 
         #Recoder.recorder()
 
