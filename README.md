@@ -1,3 +1,15 @@
+---
+title: Nova AI Interviewer
+emoji: 🤖
+colorFrom: blue
+colorTo: purple
+sdk: streamlit
+sdk_version: 1.46.1
+python_version: "3.11"
+app_file: app.py
+pinned: false
+---
+
 # 🤖 Nova AI Interviewer
 
 **A voice-based mock interview agent that asks questions, listens to your spoken answers, evaluates them in real time, and generates a final performance report — built on LangGraph and Groq.**
